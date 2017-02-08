@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>绑定 DOM 元素属性</title>
+</head>
+<body>
+	<div id="part2">
+		<p v-bind:infor="msg">
+			Hover your mouse over me for a few seconds to see my dynamically bound title!
+		</p>
+	</div>
+	<script type="text/javascript">
+		var vm=new Vue({
+			el:'#part2',
+			data:{
+				msg:'You loaded this page on '+new Date()
+			}
+		})
+	</script>
+</body>
+</html>
+<!-- notes
+1. v-bind 属性被称为指令；
+2. 指令带有前缀v-，表示它们是vue提供的特殊属性；
+3. v-bind:infor 是指将这个元素节点的infor属性与实例中的msg属性绑定在一定，msg更新，绑定的infor属性就会响应更新。
+-->
