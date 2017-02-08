@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>hello world</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div class="part1">
+		message:{{msg}}
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'.part1',
+		data:{
+			msg:'hello world!'
+		}
+	})
+</script>
+</html>
+<!-- note
+1. 使用双大括号{{}}来绑定数据内容；
+2. 每个vue.js都是通过构造函数Vue()来创建一个根实例的，经常使用vm变量表示vue实例；
+3. 每个Vue实例下data对象的所有属性都是响应的，创建后通过vm.$data访问；data对象中可以含有零个以上的键值对(key/value);
+4. el可以是css选择器，也可以是html元素；只能提供一个已经存在的DOM元素作为vue的目标，可以用vm.$el访问；
+tips: 在控制台可以相应的操作，比如vm.msg="It's me!" ,页面上的值就会相应的更新；
+-->
