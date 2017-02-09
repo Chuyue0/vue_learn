@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue 条件与循环</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="part4">
+		<p v-if="flags">Now you see me!</p>
+		<p v-else>I hinted!</p>
+		<ul>
+			<li v-for="list in lists">{{list.id}}. {{list.test}}</li>
+		</ul>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'#part4',
+		data:{
+			flags:1,
+			lists:[
+				{id:1,test:'Learn JavaScript' },
+				{id:2,test:'Learn Vue' },
+				{id:3,test:'Learn Ohter' }
+			]
+		}
+	});
+</script>
+</html>
+<!-- notes
+1. v-if="true/false"  
+	需要将它添加到一个元素上；
+	控制切换一个元素的显示；
+2. v-for="list in lists"
+	绑定数据到数组来渲染一个列表
+	list为变量名(别名)，lists为data中定义的数据。
+3. 数据遵循key/value的形式
+-->

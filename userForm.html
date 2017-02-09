@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>处理用户输入</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div class="part3">
+		<p>{{message}}</p>
+		<input type="text" v-model="message" /><br>
+		<button v-on:click="reverseMessage">Reverse Message</button>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'.part3',
+		data:{
+			message:'ABCDEFG'
+		},
+		methods:{
+			reverseMessage:function(e){
+				this.message=this.message.split('').reverse().join('');
+			}
+		}
+	})
+</script>
+</html>
+<!-- notes
+1. v-model指令
+	使得表单输入和应用状态之间做双向绑定非常轻巧；
+	v-model 用于创建的表单元素，比如input,select,radio,checkbox；
+2. v-on:click 
+	v-on指令绑定一个监听事件来监听DOM;
+	可以简写为 @click ;
+3. methods 中定义方法
+	可以通过vm.fun()来访问；
+	method调用总会执行函数,没有缓存留下；对比computed;
+	不应该使用箭头函数来定义 (a=>a+1 ) 
+
+-->
