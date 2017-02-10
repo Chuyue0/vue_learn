@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue模板语法综合</title>
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css">
+		[v-cloak]{display: none;}
+		#selectID{ width: 58px;}
+		.table{width: 500px; border: 1px solid #ddd; margin-left: 20px;}
+		#addBook{width: 500px;margin-left: 20px;}
+	</style>
+<!--	<script src="src/vue.js"></script>-->
+	<script src="https://cdn.bootcss.com/vue/1.0.28/vue.js"></script>
+	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="app" v-cloak>
+	<select id="selectID" v-model="selected" >
+		<option selected>A</option>
+		<option>B</option>
+		<option>C</option>
+	</select>
+	<p>Selected: {{selected|json}}</p>  <!--{{selected|json}}json是vue1.0版的内置过滤器，无报错。但在2.0下会报错，需要自定义过滤器json。-->
+	<p>   </p>
+	<table class="table">
+		<thead>
+			<tr>
+				<td @click="sortBy('id')">序号</td>
+				<td>书名</td>
+				<td>作者</td>
+				<td>价格</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="b in books | orderBy sortParam">
+				<td>{{b.id}}</td>
+				<td>{{b.name}}</td>
+				<td>{{b.author}}</td>
+				<td>{{b.prices}}</td>
+				<td>
+					<button class="btn btn-danger btn-xs" @click="deleteBook(b)">删除</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="addBook">
+		<legend>添加书籍</legend>
+		<div class="form-group">
+			<label for="">书名</label>
+			<input type="text" placeholder="" class="form-control" v-model="book.name" />
+		</div>
+		<div class="form-group">
+			<label for="">作者</label>
+			<input type="text" placeholder="" class="form-control" v-model="book.author" />
+		</div>
+		<div class="form-group">
+			<label for="">价格</label>
+			<input type="text" placeholder="" class="form-control" v-model="book.prices" />
+		</div>
+		<button class="btn btn-primary btn-block" v-on:click="addBook">添加</button>
+	</div>
+</div>	
+</body>
+<script>
+	var vm=new Vue({
+		el:'#app',
+		data:{
+			selected:'A',
+			sortParam:'',
+			book:{
+				id:0,
+				author:'',
+				name:'',
+				prices:''
+			},
+			books:[
+				{id:1,
+				 author:'曹雪芹',
+				 name:'红楼梦',
+				 prices:32.0
+				},
+				{id:2,
+				 author:'施耐庵',
+				 name:'水浒传',
+				 prices:30.0
+				},
+				{id:3,
+				 author:'罗贯中',
+				 name:'三国演义',
+				 prices:24.0
+				},
+				{id:4,
+				 author:'吴承恩',
+				 name:'西游记',
+				 prices:20.0
+				}]			
+		},
+		methods:{
+			//添加书籍
+			addBook:function(){
+				this.book.id=this.books.length+1;
+				this.books.push(this.book);
+				this.book=""; //重置数据
+			},
+			//删除书籍
+			deleteBook:function(book){
+				this.books.$remove(book); //splice(book,1)
+			}
+		}
+	})
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue 属性与方法</title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="vm"></div>
+</body>
+	<script>
+		var info={a:1};
+		var vm=new Vue({
+			el:"#vm",
+			data:info,
+			msg:'message',
+			create:function(){
+				document.write("this.$options.msg :" +this.$options.msg);
+				console.log(this.$options.msg); //'message'
+			}
+		});
+		document.write("vm.$data :"+vm.$data +"<br>"+"vm.$el :"+vm.$el);
+		console.log(vm.$data,vm.$el);
+		vm.a=2;
+		//$watch是一个实例方法
+		vm.$watch('a',function(newVal,oldVal){
+			//这个回调是在'vm.a'改变后调用。
+			document.write("已经改变了a的值！"+vm.a);
+			console.log(vm.a);
+		})
+	</script>
+</html>
+<!-- notes
+1. vue实例
+	每个vue实例都会代理其data对象里所有的属性。
+	vm.$el 是实例使用的根DOM元素
+	vm.$options 是用于当前vue实例的初始化选项
+	vm.$watch() 用来观察实例变化的函数或表达式。
+2. vm.$data===info
+	控制台输出得到的对象Object
+2. $watch是一个实例方法
+	回调函数得到的参数是新值和旧值，
+-->

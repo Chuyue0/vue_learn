@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue构造器基础</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	
+</body>
+	<script>
+		var info={a:1};
+		var vm=new Vue({
+			data:info
+		});
+		document.write("info.a :" +info.a +"<br />"); 
+		console.log(info.a);//1
+		document.write("vm.a :"+vm.a +"<br />");
+		console.log(vm.a);//1 这两个相等。
+		vm.a=2;
+		document.write("change vm.a, info.a :" +info.a);
+		console.log(info.a);//2 相应的改变
+	</script>
+</html>
+<!-- notes
+1. 构造函数Vue()
+	通过构造函数Vue()来创建一个根实例vm。
+2. 数据能相应的改变
+3. 可以相应的扩展构造器
+-->
