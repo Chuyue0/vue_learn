@@ -1,0 +1,11 @@
+*{margin: 0; padding: 0;font-family:'Microsoft YaHei';}
+ul,li{list-style: none;}
+input,img{border: 0 none; outline: none;}
+
+[v-cloak] {  display: none;}
+.bar{width: 400px;height: auto;padding: 5px; margin: 45px auto 10px;background-color: #5c9bb7; border-radius: 2px; position:relative;}
+.bar input{width: 100%; height: auto;line-height: 20px; padding: 10px 0; border-radius: 2px; box-shadow: 0 2px 8px #c4c4c4 inset; color: #738289; font-weight: 700; text-indent: 40px;font-size: 14px;}
+.barList{width: 430px; height: auto; margin: 0 auto;}
+.barList li{padding: 10px; border-bottom: 1px solid #ddd; overflow: hidden;}
+.barList li img{width: 60px;height: 60px; float: left;border: none;}
+.barList li p{margin-left: 75px;font-weight: 700; padding-top: 10px;color: #6e7a7f;}
