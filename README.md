@@ -19,7 +19,7 @@ API: http://cn.vuejs.org/v2/api/
 写的小例子都是根据教程来学习的，特此记录。
 
 
-2017/2/13 update
+2017/2/13 update <br>
 1.目录文件夹src为vue.js的各类可用的JS文件 ; <br>
 2.目录文件夹css为存储的各demo的样式，命名为 demo-css.css ; <br>
 
