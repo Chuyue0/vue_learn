@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>条件渲染:v-if , v-show </title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<p>v-if , v-show </p>	
+	<div id="part3">
+		<template v-if="s">
+			<h1>title</h1>
+			<p>descript1</p>
+			<p>descript2</p>
+		</template>
+		<br />
+		<p v-if="type == 'cn'">1.chinese!</p>
+		<p v-else-if="type == 'am'">3.american</p>
+		<p v-else-if="type == 'jp'">3.jpanese</p>
+		<p v-else>n.foreigners</p>
+		<br>
+		<h1 v-show="s2">v-show show!</h1>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'#part3',
+		data:{
+			s:1,
+			s2:true,
+			type:'cn',
+			logins:'users'
+		}
+	})
+</script>
+</html>
+<!-- notes
+1. v-if
+	v-if 是一个指令，需要将它添加到一个元素上；
+	它显示的是单个元素
+2. v-else
+	v-else指令给v-if添加一个else块；
+	v-else必须跟在v-if元素或者是v-else-if后，否则就不能被识别。
+3. v-else-if
+	vue 2.1.0新增，可以多次使用；
+	跟在v-if 后。 
+4. v-show
+	v-show指令根据条件展示元素；
+	但它渲染总会保留在DOM中；
+	它是简单的切换元素的css属性display;
+	v-show的后面可以直接跟v-else;
+	注意：它不支持template元素。
+5. v-if 区分 v-show
+	v-if是真实的渲染与卸载,在条件第一次为真是开始编译,会将结果缓存起来;
+	v-show始终被编译并保留，简单的用于css切换；
+	需要频繁切换使用v-show，使用条件不大被改变的情况使用v-if。
+-->

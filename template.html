@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>条件渲染: template例子</title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="part2">
+		<template v-if="s">
+			<h1>title</h1>
+			<p>descript</p>
+			<p>descript</p>
+		</template>
+		<p>以下input被重复使用了，因为2个模板中使用了相同的元素；点击按钮切换可查看！</p>
+		<template v-if="logins == 'users'">
+			<label for="">user</label>
+			<input type="text" placeholder="enter your user" />
+		</template>
+		<template v-else>
+			<label for="">email</label>
+			<input type="text" placeholder="enter your email" />
+		</template>
+		<button @click="toggleLogings">click type</button>
+		<p>以下input没有被重复使用，因为使用了key属性，是唯一的；输入文本后切换会重新渲染；label还会被复用，没有添加Key!</p>
+		<template v-if="regist == 'regist'">
+			<label for="">account</label>
+			<input type="text" placeholder="enter your account" key="account" />
+		</template>
+		<template v-else>
+			<label for="">email</label>
+			<input type="text" placeholder="enter your email" key="email" />
+		</template>
+		<button @click="toggleregists">click type</button>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'#part2',
+		data:{
+			s:true,
+			logins:'users',
+			regist:'regist'
+		},
+		methods:{
+			toggleLogings:function(){
+				this.logins= this.logins=='users' ?'':'users';
+			},
+			toggleregists:function(){
+				this.regist= this.regist=='regist' ?'':'regist';
+			}
+		}
+	});
+</script>
+</html>
+<!-- notes
+1. <template></template>
+	把它当做包装元素，可包含多元素，最后浏览器结果不会渲染出template元素；
+	实现多个元素可使用它。
+-->
