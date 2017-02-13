@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>filter例子</title>
+	<link rel="stylesheet" href="css/filter-css.css">
+	<script src="https://cdn.bootcss.com/vue/1.0.28/vue.js"></script>
+</head>
+<body>
+	<div id="main" v-cloak>
+	<div class="bar">
+		<input type="text" placeholder="Enter your search terms" v-model="searchStr" />
+	</div>
+	<ul class="barList">
+		<li v-for="a in articles | searchFor searchStr">
+			<a v-bind:href="a.url"><img v-bind:src="a.img" :alt="a.desc"></a>
+			<p>{{a.titles}}</p>
+		</li>
+	</ul>
+</div>
+</body>
+<script type="text/javascript">
+	Vue.filter('searchFor',function(value,searchStr){
+		var result=[];
+		if(!searchStr) return value;
+		searchStr=searchStr.trim().toLowerCase(); //去掉空格后在小写
+		result=value.filter(function(item){
+			if(item.titles.toLowerCase().indexOf(searchStr) !== -1){
+				return item;
+			}
+		});
+		return result;
+	});
+	var vm=new Vue({
+		el:'#main',
+		data:{
+			searchStr:'',
+			articles:[
+				{titles:'What You Need To Know About CSS Variables',
+				 url:'http://tutorialzine.com/2016/03/what-you-need-to-know-about-css-variables/',
+				 img:'http://cdn.tutorialzine.com/wp-content/uploads/2016/03/css-variables-100x100.jpg',
+				 desc:'CSS Variables'},
+				{titles:'Freebie: 4 Great Looking Pricing Tables',
+				 url:'http://tutorialzine.com/2016/02/freebie-4-great-looking-pricing-tables/',
+				 img:'http://cdn.tutorialzine.com/wp-content/uploads/2016/02/great-looking-pricing-tables-100x100.jpg',
+				 desc:'Pricing Tables'},
+				{titles:'20 Interesting JavaScript and CSS Libraries for February 2016',
+				 url:'http://tutorialzine.com/2016/02/20-interesting-javascript-and-css-libraries-for-february-2016/',
+				 img:'http://cdn.tutorialzine.com/wp-content/uploads/2016/02/interesting-resources-february-100x100.jpg',
+				 desc:'JavaScript and CSS Librarie'},
+				{titles:'Quick Tip: The Easiest Way To Make Responsive Headers',
+				 url:'http://tutorialzine.com/2016/02/quick-tip-easiest-way-to-make-responsive-headers/',
+				 img:'http://cdn.tutorialzine.com/wp-content/uploads/2016/02/quick-tip-responsive-headers-100x100.png',
+				 desc:' Make Responsive Headers'}
+			]
+		}
+	})
+</script>
+</html>
+<!-- notes
+1. 指令v-cloak
+	在未加载完模板时不显示;
+	结合[v-cloak] {  display: none;} 使用;
+2. 指令缩写
+	v-bind:href 缩写为 :href  
+	v-on:click 缩写为 @click
+3. 过滤器
+	Vue.filter('sort',function(){}) 全局过滤器
+	var myFilter=Vue.filter('sort') 返回已注册的过滤器
+-->
