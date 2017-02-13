@@ -1,0 +1,4 @@
+.tit{font-size: 14px;color: aquamarine;}
+.tit.active{color: aqua;}
+.tit.error{color: crimson;}
+.classObject{ color: red}
