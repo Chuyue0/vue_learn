@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>class与style绑定</title>
+	<link rel="stylesheet" href="css/bindStyle-css.css">
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="vm">
+		<p class="tit" v-bind:class="{active:isAct,error:hasError}">{{msg}}</p>
+		<div v-bind:class="{classObject:cobj}">vue</div>
+		<p></p>
+		<div v-bind:style="{color:actColors,fontSize:fsize+'px'}">js</div>
+		<div v-bind:style="styleObj">哇233</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'#vm',
+		data:{
+			msg:'hello',
+			isAct:true,
+			hasError:false,
+			cobj:true,
+			actColors:'red',
+			fsize:20,
+			styleObj:{
+				color:'blue',
+				fontSize:'12px',
+				fontWeight:700
+			}
+		}
+	})
+</script>
+</html>
+<!-- notes
+1. v-bind:class 绑定html class
+	传给 v-bind:class 一个对象,可以动态的切换class;
+	有多种语法可以选择，这里使用的是对象语法；
+2. v-bind:style 绑定内联样式
+	这里使用的是对象语法；
+	css命名方式以驼峰命名或短横线分隔命名；
+	看起来十分直观；
+-->
