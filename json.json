@@ -1,0 +1,57 @@
+pages:[
+	{
+		id:0,
+		title:'hello world.html',
+		descript:'vue入门'
+	},
+	{
+		id:1,
+		title:'constructor.html',
+		descript:'vue构造器基础了解'
+	},
+	{
+		id:2,
+		title:'prop.html',
+		descript:'属性与方法'
+	},
+	{
+		id:3,
+		title:'userForm.html',
+		descript:'用户表单'
+	},
+	{
+		id:4,
+		title:'ifANDfor.html',
+		descript:'指令：v-if和v-for基础了解'
+	},
+	{
+		id:5,
+		title:'bindElement.html',
+		descript:'绑定 DOM 元素属性'
+	},
+	{
+		id:6,
+		title:'filter.html',
+		descript:'filter例子'
+	},
+	{
+		id:7,
+		title:'grammer.html',
+		descript:'模板语法综合例子'
+	},
+	{
+		id:8,
+		title:'bindStyle.html',
+		descript:'class与style的绑定'
+	},
+	{
+		id:9,
+		title:'template.html',
+		descript:'条件渲染: template例子了解'
+	},
+	{
+		id:10,
+		title:'conditeRender.html',
+		descript:'条件渲染:v-if 和 v-show进一步了解'
+	}
+]
