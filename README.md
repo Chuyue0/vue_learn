@@ -1,9 +1,9 @@
 # vue_learn
 学习vue时写的小demo
-:blush: <br >
+:blush:  
 学习来源： <br />
 教程：http://cn.vuejs.org/v2/guide/ <br />	
-API: http://cn.vuejs.org/v2/api/
+API: http://cn.vuejs.org/v2/api/  
 
 引入方式：
 <script src=""></script>
