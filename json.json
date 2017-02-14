@@ -55,12 +55,12 @@ pages:[
 		descript:'条件渲染:v-if 和 v-show进一步了解'
 	},
 	{
-		id:12,
+		id:11,
 		title:'event.html',
 		descript:'事件处理器基础'
 	},
 	{
-		id:11,
+		id:12,
 		title:'formWidget.html',
 		descript:'表单控件绑定'
 	},
