@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue组件基础</title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="component">
+		template: <br>
+		<my-ponent></my-ponent>
+		<my-ponent></my-ponent>
+		<my-ponent></my-ponent>
+	</div>
+</body>
+<script type="text/javascript">
+	/*1.父实例Vue的模块中自定义元素使用；全局注册组件*/
+	/*
+	Vue.component('my-ponent',{
+		template:'<div>Custom component</div>'
+	});
+	var vm=new Vue({
+		el:'#component'
+	});*/
+	/*2.局部注册*/
+	/*var child={
+		template:'<div>Custom component 2.0</div>'
+	};
+	new Vue({
+		el:'#component',
+		components:{
+			'my-ponent':child
+		}
+	});*/
+	/*3.组件中的data必须是函数*/
+	var data={counts:0};
+	Vue.component('my-ponent',{
+		template:'<button v-on:click="counts+=1">{{counts}}</button>',
+		data:function(){
+			return {
+				counts:0
+			}
+		}
+	});
+	var vm=new Vue({
+		el:'#component'
+	})
+</script>
+</html>
+<!-- notes
+1. 组件
+	是自定义元素，可以扩展html元素，封装可重用的代码；
+	功能较强大；
+	全局注册；
+	局部注册：不必在全局注册组件；通过使用组件实例选项注册，可使在另一个实例/组件的作用域中可用；
+2. 自定义元素
+	确保在根实例初始化之前注册组件；
+3. 组件中的data必须是函数
+-->

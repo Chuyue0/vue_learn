@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件处理器基础</title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="part1">
+	<p>一、监听事件</p>
+	<button v-on:click="count+=1">+1</button>
+	<p>增加了{{count}}次</p>
+ 
+	<p>二、方法事件处理器</p>
+	<button @click="greet">greet</button>
+	
+	<p>三、内联处理器方法</p>
+	<button @click="inlineWay('hi')">say hi</button>
+	<button @click="inlineWay('me')">say me</button>
+	
+	<p>四、事件修饰符</p>
+	
+	<p>五、按键修饰符</p>
+	<p>监听键盘上的键，只有keycode是13时调用vm.submit()</p>
+	<input v-on:keyup.13="submit" />
+</div>
+	<script type="text/javascript">
+		var vm=new Vue({
+			el:'#part1',
+			data:{
+				count:0,
+				names:'vue.js'
+			},
+			methods:{
+				addCount:function(){
+					return this.count++;
+				},
+				greet:function(event){
+					alert("hello "+this.names); //hello vue.js
+					console.log(event.target.tagName); //BUTTON
+				},
+				inlineWay:function(msg){
+					alert(msg);
+				},
+				submit:function(){
+					window.location.reload();
+				}
+			}
+		});	
+	</script>
+</body>
+</html>
+<!-- notes
+1. v-on 指令监听事件
+	监听DOM事件来触发js代码；
+	v-on:click 可以简写为@click。
+2. event
+	event是原生dom事件；
+3. v-on接收一个定义的方法来调用
+	直接调用方法为 vm.greet();
+4. 内联处理器
+	在内联语句处理器中访问DOM事件，可以使用特殊变量$event传入方法中;
+	inlineWay('hi','$event')
+	inlineWay:function(msg,event){if(event) event.preventDefault()}
+	就可以直接使用原生事件对象。
+5. 事件修饰符 .点来调用
+	常用的有
+	.stop 
+	<div v-on:click.stop="doThid"></div> 阻止单击事件冒泡；
+	.prevent
+	<div v-on:submit.prevent="onSubmit"></div> 提交事件不在重载页面；
+	等。
+6. 按键修饰符 是用键盘事件
+	v-on:keyup.13
+	v-on:keyup.enter
+	@keyup.enter
+	都是同样的写法；
+	有 enter / tab / del / esc / space / up / down / left / right 等；
+	还可以自定义keyCodes修饰符别名使用
+	定义： Vue.config.keyCodes.f1=112;
+	使用： v-on:keyup.f1
+-->

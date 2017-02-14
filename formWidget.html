@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表单控件绑定</title>
+	<script src="src/vue.js"></script>
+</head>
+<body>
+	<div id="form">
+		<p>1.基础文本：</p>
+		<input type="text" v-model="name" placeholder="enter your name">
+		<p>your name is : {{name}}</p>
+		<p>2.基础多行文本：</p>
+		<textarea name="" id="" cols="21" rows="10" placeholder="enter your introduce" v-model="intro"></textarea>
+		<p>your introduce is : {{intro}}</p>
+		<p>3.单个复选框：</p>
+		<input type="checkbox" id="checkbox" v-model="checked">
+		<label for="checkbox">{{checked}}</label>
+		<p>4.多个复选框，绑定到同一个数组：</p>
+		<input type="checkbox" id="van" value="van" v-model="nameList">
+		<label for="john">van</label>
+		<input type="checkbox" id="chuyue" value="chuyue" v-model="nameList">
+		<label for="chuyue">chuyue</label>
+		<input type="checkbox" id="ycha" value="ycha" v-model="nameList">
+		<label for="ycha">ycha</label>
+		<p>nameList: {{nameList}}</p>
+		<p>单选按钮：</p>
+		<input type="radio" id="female" value="girl" v-model="sex" />
+		<label for="female">female</label><br>
+		<input type="radio" id="male" value="boy" v-model="sex" />
+		<label for="male">male</label>
+		<p>your sex is : {{sex}}</p>
+		<p>5.单选列表：</p>
+		<select v-model="selected1">
+			<option >1</option>
+			<option >2</option>
+			<option >3</option>
+		</select>
+		<p>selected is : {{selected1}}</p>
+		<p>6.多选列表，绑定到同一个数组：</p>
+		<select multiple v-model="mulSelec">
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<P>multiple selected is : {{mulSelec}}</P>
+		<p>7.列表动态渲染：</p>
+		<select v-model="selected2">
+			<option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
+		</select>
+		<p>selected2 is : {{selected2}}</p>
+		<p>8.v-model,绑定value</p>
+		<input type="radio" value="a" v-model="picked" />
+		<p>picked is : {{picked}}</p>
+		<input type="checkbox" v-model="toggle" />
+		<p>toggle is : {{toggle}}</p>
+		<select v-model="selectsed3">
+			<option value="abc">ABC</option>
+		</select>
+		<P>selectsed3 is : {{selectsed3}}</P>
+		<input type="radio" v-model="picked2" v-bind:value="selected2" /><!--这里绑定的是属性selected2的值，显示出来为'a'-->
+		<p>picked2 is : {{picked2}}</p>
+		<select v-model="selected4">
+			<option v-bind:value="{number:123}">123</option><!--这里使用了内联对象，选中时值是number-->
+		</select>
+		<p>绑定的value值为: {{selected4}}</p>
+		<p>9.修饰符</p>
+		<input type="text" v-model.trim="msg" /><!--当你输入   123   ，自动去掉首尾空格变为123-->
+		<p>你输入的值是：{{msg}}</p>
+	</div>
+</body>
+<script type="text/javascript">
+	var vm=new Vue({
+		el:'#form',
+		data:{
+			name:'',
+			intro:'',
+			checked:false,
+			nameList:[],
+			sex:'',
+			selected1:'1',
+			mulSelec:[],
+			selected2:'a',
+			options:[
+				{value:'a',text:'one'},
+				{value:'b',text:'two'},
+				{value:'c',text:'three'}
+			],
+			picked:'',
+			picked2:'',
+			toggle:'',
+			selectsed3:'abc',
+			msg:'',
+			selected4:''
+		}
+	});
+</script>
+</html>
+<!--notes
+1. v-model
+	用v-model指令在表单控件元素上创建双向数据绑定
+2. <textarea></textarea>中间插值不会生效，只能以v-model的形式
+3. checkbox绑定到数组时，绑定的是input的value值;
+4. v-bind:value 绑定一个动态属性
+	v-bind:属性
+	当选中时，v-bind:value显示的是绑定的值；
+	属性值可以不是字符串；
+5. v-model.修饰符
+	修饰符有 trim , number , lazy ;
+	trim 自动过滤输入的首尾空格，v-model.trim 过滤输入空格；
+	number 将输入的值转为Number型，v-model.number处理输入值；
+	lazy  在change事件中同步输入框的值和数据；
+-->
