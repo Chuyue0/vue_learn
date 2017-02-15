@@ -73,5 +73,10 @@ pages:[
 		id:14,
 		title:'componentMult.html',
 		descript:'vue父子组件通信例子'
+	},
+	{
+		id:15,
+		title:'componentProp.html',
+		descript:'vue组件-props了解'
 	}
 ]
