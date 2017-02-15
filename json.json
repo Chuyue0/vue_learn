@@ -68,5 +68,10 @@ pages:[
 		id:13,
 		title:'component.html',
 		descript:'vue组件基础'
+	},
+	{
+		id:14,
+		title:'componentMult.html',
+		descript:'vue父子组件通信例子'
 	}
 ]
