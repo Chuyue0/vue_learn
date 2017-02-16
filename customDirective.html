@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue-自定义指令</title>
+	<script src="//unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="directived">
+		<p>页面加载时，元素将获得focus焦点</p>
+		<input type="text" v-focus />
+	</div>
+
+<script type="text/javascript">
+	/*注册一个全局自定义指令v-focus*/
+	/*Vue.directive('focus',{
+		inserted:function(el){ //将绑定元素插入到DOM中
+			el.focus();
+		}
+	});*/
+	new Vue({
+		el:'#directived',
+		directives:{
+			focus:{		//注册一个局部自定义指令，在本实例中可用
+				inserted:function(el){
+					el.focus();
+				}
+			}
+		}
+	})
+</script>
+</body>
+</html>
+<!-- notes
+1. 自定义指令
+	在对DOM元素进行底层操作的时候用；
+2. 钩子函数
+	inserted:被绑定元素插入到父节点时调用（父节点存在即可调用，不必存在于document中）；
+	参数el：指令所绑定的元素，可以用来直接操作DOM ；
+-->

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue组件-自定义事件-例子</title>
+	<script src="src/vue.js"></script>
+	<script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/98739fb8ac6779cb2da11aaa9ab6032e52f3be00/currency-validator.js"></script>
+</head>
+<body>
+	<div id="customeg">
+		<p>1.自定义事件的表单输入</p>
+		<input type="text" v-model="something" />
+		<p>message: {{something}}</p>
+		<p>2.例子</p>
+		<div>
+			<currency lab="Price" v-model="price"></currency>
+			<currency lab="Ship" v-model="shipping"></currency>
+			<currency lab="Handle" v-model="handling"></currency>
+			<currency lab="Discount" v-model="discount"></currency>
+			<p>Total：${{total}}</p>
+		</div>
+<!--		<child ref="pro"></child>-->
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.component('currency',{
+		template:'\
+			<div>\
+			  <label v-if="lab" >{{lab}}</label>\
+			  $\
+			  <input\
+				ref="ipt"\
+				v-bind:value="value"\
+				v-on:input="updateVal($event.target.value)"\
+				v-on:focus="selectAll"\
+				v-on:blur="formatVal"\
+			  >\
+			</div>\
+		',
+		props:{
+			value:{
+				type:Number,
+				default:0
+			},
+			lab:{
+				type:String,
+				default:''
+			}
+		},
+		mounted:function(){
+			this.formatVal()
+		},
+		methods:{
+			updateVal:function(value){
+				var result=currencyValidator.parse(value,this.value);
+				if(result.warning){
+					this.$refs.ipt.value=result.value;
+				}
+				this.$emit('input',result.value);
+			},
+			formatVal:function(){
+				this.$refs.ipt.value=currencyValidator.format(this.value);
+			},
+			selectAll:function(event){
+				event.target.select();
+			}
+		}
+	})
+	var vm=new Vue({
+		el:'#customeg',
+		data:{
+			something:'nikita',
+			price:0,
+			shipping:0,
+			handling:0,
+			discount:0
+		},
+		computed:{
+			total:function(){
+				return ((this.price*100+this.shipping*100+this.handling*100-this.discount*100)/100).toFixed(2);
+			}
+		}
+	})
+</script>
+</html>
+<!-- notes
+1.$refs  ->  子组件索引
+	需要在js中直接访问子组件时，可以把他当做一个索引id；
+	1.1.使用方法：
+	在子组件模板上使用ref指定一个索引ID： <child ref="pro"></child>
+	1.2.访问子组件：
+	var child=vm.$refs.pro;
+-->
