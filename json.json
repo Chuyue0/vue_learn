@@ -78,5 +78,20 @@ pages:[
 		id:15,
 		title:'componentProp.html',
 		descript:'vue组件-props了解'
+	},
+	{
+		id:16,
+		title:'componentCustomEg.html',
+		descript:'vue组件-自定义事件-例子'
+	},
+	{
+		id:17,
+		title:'directiveMul.html',
+		descript:'vue基础指令'
+	},
+	{
+		id:18,
+		title:'customDirective.html',
+		descript:'vue自定义指令'
 	}
 ]
