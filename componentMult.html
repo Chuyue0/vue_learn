@@ -15,7 +15,8 @@
 	<p>父组件</p>
 	<div id="parents">
 		<p>message: {{messages}}</p>
-		<child></child>
+		<child v-on:child-msg="handle"></child>
+<!--		<child></child>	-->
 	</div>
 </body>
 <script type="text/javascript">
@@ -42,11 +43,16 @@
 		data:{
 			messages:[]
 		},
-		events:{ // 在创建实例时 `events` 选项简单地调用 `$on`
-			'child-msg':function(msg){ 
+		methods:{
+			handle:function(msg){
 				this.messages.push(msg);
 			}
 		}
+		/*events:{ // 在创建实例时 `events` 选项简单地调用 `$on`
+			'child-msg':function(msg){ 
+				this.messages.push(msg);
+			}
+		}*/
 	})
 </script>
 </html>
