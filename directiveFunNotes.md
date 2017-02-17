@@ -17,8 +17,8 @@
 	vnode: vue编译生成的虚拟节点，数组方式呈现；  
 		虚拟节点详见 https://github.com/vuejs/vue/blob/dev/src/core/vdom/vnode.js  
 3. 钩子函数  
-	bind,inserted,update,unbind,componentUpdated
-	unbind:只调用一次，指令与元素解绑时调用；
-	update:被绑定元素所在的模板更新时调用，不论绑定值是否变化；
-	componentUpdated:被绑定元素所在模板完成一个更新周期调用；
-4. join()转换为字符串 typeof 的值为string
+	bind,inserted,update,unbind,componentUpdated  
+	unbind:只调用一次，指令与元素解绑时调用；  
+	update:被绑定元素所在的模板更新时调用，不论绑定值是否变化；  
+	componentUpdated:被绑定元素所在模板完成一个更新周期调用；  
+4. join()转换为字符串 typeof 的值为string  
