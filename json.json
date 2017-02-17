@@ -93,5 +93,20 @@ pages:[
 		id:18,
 		title:'customDirective.html',
 		descript:'vue自定义指令'
+	},
+	{
+		id:19,
+		title:'directiveFun.html',
+		descript:'vue指令-钩子函数'
+	},
+	{
+		id:20,
+		title:'directiveFunNotes.md',
+		descript:'vue指令-钩子函数记录知识点'
+	},
+	{
+		id:21,
+		title:'objectLiteral',
+		descript:'vue指令-对象字面量'
 	}
 ]
