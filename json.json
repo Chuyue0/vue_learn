@@ -1,4 +1,5 @@
-pages:[
+{
+"pages":[
 	{
 		id:0,
 		title:'hello world.html',
@@ -109,4 +110,4 @@ pages:[
 		title:'objectLiteral',
 		descript:'vue指令-对象字面量'
 	}
-]
+]}
