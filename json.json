@@ -1,4 +1,5 @@
-pages:[
+{
+"pages":[
 	{
 		id:0,
 		title:'hello world.html',
@@ -114,4 +115,4 @@ pages:[
 		title:'route.html',
 		descript:'vue路由器基础'
 	}
-]
+]}
