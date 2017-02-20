@@ -25,6 +25,10 @@ API: http://cn.vuejs.org/v2/api/
 2.目录文件夹css为存储的各demo的样式，命名为 `demo-css.css` ; <br>
 3.文件json.json是对`html页面的命名说明和描述` ; <br>
 
+2017/2/20  update <br>
+1.vue路由器`unpkg`引入  
+	http://unpkg.com/vue-router/dist/vue-router.js
+
 
 
 
