@@ -106,7 +106,12 @@ pages:[
 	},
 	{
 		id:21,
-		title:'objectLiteral',
+		title:'objectLiteral.html',
 		descript:'vue指令-对象字面量'
+	},
+	{
+		id:22,
+		title:'route.html',
+		descript:'vue路由器基础'
 	}
 ]
