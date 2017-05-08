@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>vue.js 官网例子</title>
+<style type="text/css">
+	.color0{color: #222222;}
+	.color1{color: #FF0000;}
+</style>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+</head>
+<body id="demo">
+	<h2>使用vue 1.0和 vue 2.0 结合学习</h2>
+	<p class="color{{index}}">start!</p>
+	<p>{{msg1}}</p><!--1.文本插值-->
+	<p>{{msg2}}</p>
+	<input type="text" value="" v-model="msg2" /><!--2.双向绑定-->
+	<div>
+		<div v-for="list in downList" v-html="list.name" :data-id="list.gameid"></div>
+	</div><!--3.渲染列表-->
+	<p v-html="msg3"></p>
+	<button @click="reverseMsg">click me</button> <!--4.处理用户输入-->
+	<div>
+		<input type="text" v-model="downInfor" v-on:keyup.enter="addDownInfoData" />
+		<ul>
+			<li v-for="list in downInfoList" :data-id="list.id">
+				<span v-html="list.text"></span>
+				<button v-on:click="removeDownInfoData($event)">X</button>
+			</li>
+		</ul>
+	</div><!--5.综合-->
+</body>
+<script type="text/javascript">
+	Vue.config.debug=true;
+	var defaultFilter={
+		id:0,
+		text:'全部'
+	};
+	var $vm=new Vue({
+		el:'#demo',
+		data:{
+			index:1,
+			msg1:'no.1 msg!',
+			msg2:'',
+			msg3:'no.3 msg yeah.',
+			downInfor:'',
+			downList:[
+				{id:0,name:'world',gameid:'1205'},
+				{id:1,name:'world2',gameid:'1206'},
+				{id:2,name:'world3',gameid:'1207'},
+			],
+			downInfoList:[
+				{id:00,text:'default text.'},
+			],
+		},
+		methods:{
+			reverseMsg:function(){
+				this.msg3=this.msg3.split('').reverse().join('');
+			},
+			addDownInfoData:function(){
+				var t=this.downInfor.trim();
+				if(t){
+					this.downInfoList.push({text:t});
+					this.downInfor='';
+				}
+			},
+			removeDownInfoData:function(index){
+				this.downInfoList.splice(index,1);
+			},
+		},
+		created:function(){
+			console.log("$vm.msg2:"+this.msg1);
+		},
+	})
+</script>
+</html>
