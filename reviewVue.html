@@ -4,12 +4,17 @@
 <meta charset="UTF-8">
 <title>vue.js 官网例子</title>
 <style type="text/css">
+	body>div{margin: 10px 0;}
+	.bg1{background-color: #F5E79E;}
+	.bg2{background-color: #F5F5F5;}
+	.bg3{background-color: #FFFFFF;}
 	.color0{color: #222222;}
-	.color1{color: #FF0000;}
+	.color1,.tips{color: #FF0000;}
+	.hidden{display: none;}
 </style>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
 </head>
-<body id="demo">
+<body id="demo" class="bg1" v-bind:class="{'bg2':showBg2==1}">
 	<h2>使用vue 1.0和 vue 2.0 结合学习</h2>
 	<p class="color{{index}}">start!</p>
 	<p>{{msg1}}</p><!--1.文本插值-->
@@ -26,12 +31,45 @@
 			<li v-for="list in downInfoList" :data-id="list.id">
 				<span v-html="list.text"></span>
 				<button v-on:click="removeDownInfoData($event)">X</button>
+				<p class="hidden">v-on指令缩写为 @ ,用于监听DOM事件；</p>
+				<p class="hidden">v-bind指令缩写为 : ,用于响应的更新HTML特性(attribute)；</p>
 			</li>
 		</ul>
 	</div><!--5.综合-->
+	<hr />
+	<h4>2017/5/9 update</h4>
+	<div>
+		<p>{{msg4 | capitalize}}</p> 
+	</div><!--6.vue1内置过滤器函数（首字母大写）-->
+	<div>
+		计算 a={{num1}} ， b={{num2}}
+		<p class="hidden">声明了一个计算属性 num2 ，提供的函数 getNum2 将用作 $vm.num2 的 getter ;</p>
+		<p class="hidden">this.num2 的值永远取决于 this.num1 的值</p>
+		<p class="hidden">计算属性默认只是getter,需要的时候也提供一个setter</p>
+	</div><!--7.计算属性基础例子-->
+	<div>
+		<span v-bind:style="{color:colors,fontSize:fontSize+'px'}">绑定内联样式1</span>
+		<br />
+		<span v-bind:style="activeStyle">绑定内联样式2</span>
+		<p class="hidden">body背景色动态切换，使用对象语法{key:value}，v-bind:class="{'bg2':showBg2==1}"</p>
+	</div><!--8.html class 与 style绑定 -->
+	<div>
+		<template v-if="showTemp">
+			<p>标题！</p>
+			<p>段落1</p>
+			<p>段落2</p>
+		</template>
+	</div><!--9.条件渲染-->
+	<div>
+		<div v-for="list in downList" :data-id="list.gameid">{{$index}}.{{list.name}}</div>
+		<div v-for="(i,list) in downList" :data-id="list.gameid">{{i}}.{{list.name}}</div>
+		<p class="hidden">使用v-for指令基于一个数组渲染一个列表；</p>
+		<p class="hidden">格式为： list in sourceList ,其中list为当前数组的别名，sourceList为原数组；</p>
+		<p class="hidden">特殊变量$index:当前数组元素的索引值，从0开始；也可以为索引指定一个别名，在v-for="(index,list) in downList"</p>
+	</div><!--10.列表渲染v-for -->
 </body>
 <script type="text/javascript">
-	Vue.config.debug=true;
+	Vue.config.debug=false;
 	var defaultFilter={
 		id:0,
 		text:'全部'
@@ -43,6 +81,7 @@
 			msg1:'no.1 msg!',
 			msg2:'',
 			msg3:'no.3 msg yeah.',
+			msg4:'van',
 			downInfor:'',
 			downList:[
 				{id:0,name:'world',gameid:'1205'},
@@ -52,6 +91,21 @@
 			downInfoList:[
 				{id:00,text:'default text.'},
 			],
+			num1:1,
+			num2:0,
+			showBg2:true,
+			colors:'#3298ff',
+			fontSize:16,
+			activeStyle:{
+				color:'#3298ff',
+				fontSize:'16px',
+			},
+			showTemp:1,
+		},
+		computed:{
+			getNum2:function(){
+				return this.num2=this.num1+1;
+			}
 		},
 		methods:{
 			reverseMsg:function(){
@@ -69,8 +123,13 @@
 			},
 		},
 		created:function(){
-			console.log("$vm.msg2:"+this.msg1);
+			console.log("this.msg2:"+this.msg1); //this.msg2:no.1 msg!
+			console.log("计算属性this.num2:"+this.getNum2); //计算属性this.num2:2
 		},
 	})
+	window.onload=function(){
+		$vm.num1=2;
+		console.log("计算属性$vm.num2:"+$vm.getNum2); //计算属性$vm.num2:3
+	}
 </script>
 </html>
