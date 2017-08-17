@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>可复用的网格组件例子</title>
+	<style type="text/css">
+		body{font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: #444444;}
+		table{border: 2px solid #42b983; border-radius: 3px; background-color: #fff;}
+		table tr{}
+		table tr th{ background-color: #42b983; cursor: pointer; color: rgba(255,255,255,0.8); user-select: none; -moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;}
+		table tr td{background-color: #f9f9f9;}
+		table tr th,table tr td{padding: 10px 12px; min-width: 120px;}
+		table tr th.active{color: #fff;}
+		table tr th.active .arrow{opacity: 1;}
+		.arrow{display: inline-block; width: 0; height: 0; margin-left: 5px; vertical-align: middle; opacity: 0.8; }
+		.arrow.asc{border-left: 4px solid transparent;border-right: 4px solid transparent; border-bottom: 4px solid #fff;}
+		.arrow.dsc{border-left: 4px solid transparent;border-right: 4px solid transparent; border-top: 4px solid #fff;}
+	</style>
+	<script src="src/vue.min.js"></script>
+	<script type="text/x-template" id="gridTemplate">//组件模板
+		<table >
+			<thead>
+				<tr>
+					<th v-for="key in columns" @click="sortBy(key)" :class="{'active':sortKey==key}">
+						{{key | capitalize}}
+						<span class="arrow" :class="sortOrder[key]>0?'asc':'dsc'"></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="list in filterData">
+					<td v-for="key in columns">
+						{{list[key]}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</script>
+</head>
+<body>
+	<div id="main"> <!--root element-->
+		<form id="form1">
+			Search:<input type="text" placeholder="search here" v-model="searchQuery" />
+		</form>
+		<gridtemplate :data="gridData" :columns="gridColumns" :filter-key="searchQuery"></gridtemplate>
+	</div>
+	<script type="text/javascript">
+		Vue.component("gridtemplate",{
+			template:"#gridTemplate",
+			props:{
+				data: Array,
+				columns: Array,
+				filterKey: String
+			},
+			data:function(){
+				var sortOrder={};
+				this.columns.forEach(function(key){
+					sortOrder[key]=1;
+				});
+				return {
+					sortKey:'',
+					sortOrder:sortOrder
+				}
+			},
+			computed:{
+				filterData:function(){
+					var sortkey=this.sortKey,
+						filterkey=this.filterKey && this.filterKey.toLowerCase(),
+						order=this.sortOrder[sortkey] || 1,
+						data=this.data;
+					if(filterkey){
+						data=data.filter(function(row){//过滤实现
+							return Object.keys(row).some(function(key){
+								return String(row[key]).toLowerCase().indexOf(filterkey) > -1
+							})
+						})
+					}
+					if(sortkey){
+						data=data.slice().sort(function(a,b){ //排序实现
+							a=a[sortkey];
+							b=b[sortkey];
+							return (a === b ? 0 : a > b ? 1 : -1) * order
+						})
+					}
+					return data;
+				}
+			},
+			filters:{
+				capitalize:function(str){ //首字母大写
+					return str.charAt(0).toUpperCase()+str.slice(1);
+				}
+			},
+			methods:{
+				sortBy:function(key){ //排序定义
+					this.sortKey=key;
+					this.sortOrder[key]=this.sortOrder[key]* -1
+				}
+			}
+		})
+		var $vm=new Vue({
+			el:"#main",
+			data:{
+				searchQuery:'',
+				gridData:[
+					{name:'Chuck Norris',power:Infinity},
+					{name:'Bruce Lee',power:9000},
+					{name:'Jackie Chan',power:7000},
+					{name:'Jet Li',power:8000},
+				],
+				gridColumns:['name','power'],
+			}
+		})
+	</script>
+</body>
+</html>

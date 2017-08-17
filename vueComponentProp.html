@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件-Prop</title>
+	<script src="src/vue.min.js"></script>
+	<script type="text/x-template" id="exampleDialog">
+		<ul v-if="show==1">
+			<li v-if="hasper(6)">使用道具1</li>
+			<li v-if="hasper(7)">使用道具2</li>
+			<li v-if="hasper(0)">删帖</li>
+			<li v-if="hasper(1)">置顶</li>
+			<li v-if="1">{{nickname}}</li>
+		</ul>
+	</script>
+</head>
+<body>
+	<div id="prop">
+		<p>1.使用prop传送数据</p>
+		<childs message="childs props"></childs>
+		<p>2.驼峰和短横线隔开命名形式</p>
+		<childs my-message="childs props 2"></childs>
+		<p>3. 动态prop</p>
+		<div>
+			<input type="text" v-model="msgs" />  
+			<br>
+			<childs v-bind:my-message="msgs"></childs>
+		</div>
+		<hr />
+		<div v-for="list in info">
+			<!--组件中的perlist使用有误，结果无显示-->
+			<exampledialog :perlist.once="perList" :tribeid.once="list.tribeid" :ages.once="list.ages" :nickname.once="list.nickname" ></exampledialog>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">//使用字符串模板（使用text/x-template,并且指定id）进行组件使用
+	Vue.component("exampledialog",{
+		template:"#exampleDialog",
+		props:{  //props允许外部环境传递数据给组件
+			name:String,  //基础类型检测 (`null` 意思是任何类型都可以)
+			tribeid:[String,Number],  //多种类型
+			nickname:{  //必传且是字符串
+				type:String,
+				required:true
+			},
+			ages:{  //数字，有默认值
+				type:Number,
+				default:18
+			},
+			permissionList:{  //数组或对象，默认值由工厂函数返回
+				type:Object,
+				default:function(){
+					return {message:'hello'}
+				}
+			},
+			num:{  //自定义验证函数
+				validator:function(ages){
+					return ages==0?'baby':(ages>18?'adult':'kids')
+				}
+			},
+			perlist:[Array],
+			callback:Function  //回调函数
+		},
+		data:function(){
+			return {
+				show:0
+			}
+		},
+		created:function(){
+			this.show=1;
+		},
+		methods:{
+			hasper:function(n){
+				for(var i=0;i<this.perlist.length;i++){
+					if(this.perlist[i]==n){
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+	})
+</script>
+<script type="text/javascript">
+	Vue.component('childs',{ 
+		props:['myMessage'],	//声明props
+		template:'<span>{{myMessage}}</span>'	//
+	})
+	var vm=new Vue({
+		el:'#prop',
+		data:{
+			msgs:'messages from parents',
+			info:[
+				{
+					id:01,
+					tribeid:1301,
+					name:'秦时丽人',
+					nickname:'丽姬传',
+					ages:1,
+				},{
+					id:03,
+					tribeid:1302,
+					name:'朝火如歌',
+					nickname:'朝歌',
+					ages:12,
+				},{
+					id:04,
+					tribeid:1303,
+					name:'颤抖吧',
+					nickname:'et',
+					ages:8,
+				}
+			],
+			perList:[],
+		},
+		methods:{
+			getperList:function(){
+				for(var i in 8){
+					this.perList[i]=i;
+					if(i==6)this.perList[i]=12;
+					if(i==7)this.perList[i]=13;
+				}
+			},
+		},
+		created:function(){
+			this.getperList();
+		}
+	});
+</script>
+
+</html>
+<!-- notes
+1. prop
+	prop 是父组件用来传递数据的一个自定义属性；
+	需要在子组件中显式声明props；
+	是单向绑定，父组件变化时，将传导给子组件;但是不会反过来；
+2. html特性不区分大小写，当使用非字符串模板时，props的名字会从驼峰转为短横线；
+3. v-bind:动态绑定
+	绑定props的值到父组件的数据中，父组件更新，子组件也跟着更新；
+	v-bind:my-message 缩写语法 :my-message
+4. 自定义事件
+	父组件传递给子组件数据，使用的是props；
+	子组件传递给父组件数据，使用的是自定义事件；
+5. 绑定自定义事件
+	使用v-on来绑定
+-->

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>SVG图标组件实例</title>
+	<style type="text/css">
+		body{font-family: "arial, helvetica, sans-serif"; color: #444;}
+		polygon{fill:#42b983; opacity:0.8;}
+		circle{fill:transparent; stroke: #999;}
+		label{display: inline-block; vertical-align: middle; width: 20px;margin-left: 20px;}
+		text{font-size: 10px; fill: #666;}
+		.move{}
+		#raw{position: absolute;left: 400px; top: 80px;}
+	</style>
+	<script src="src/vue.min.js"></script>
+	<script type="text/x-template" id="chartsTemplate">
+		<g>
+			<polygon :points="pointsFn"></polygon> <!-- :points绑定到属性points -->
+			<circle r="80" cx="100" cy="100"></circle>
+			<axisLabel :stat="stat" :index="index" :len="stats.length" v-for="(stat,index) in stats"></axisLabel>
+		</g>
+	</script>
+	<script type="text/x-template" id="axisTemplate">
+		<text :x="pointFn.x" :y="pointFn.y">{{stat.label}}</text>
+	</script>
+</head>
+<body>
+	
+	<p>本示例展示了一个结合体，它由常用组件、计算属性、2 种绑定方式和 SVG 的支持组成。</p>
+	<div id="main">
+		<svg width="200" height="200">
+			<chartstemplate :stats="stats"></chartstemplate>
+		</svg>
+		<div class="stat" v-for="stat in stats">
+			<label>{{stat.label}}</label>
+			<input type="range" min="0" max="100" v-model="stat.value" />
+			<span>{{stat.value}}</span>
+			<button class="move" @click="remove(stat)">X</button>
+		</div>
+		<br />
+		<form>
+			<input type="text" name="newLabel" v-model="newLabel" />
+			<button @click="addStat">add a stat</button>
+		</form>
+		<pre id="raw">{{stats}}</pre>
+	</div>
+	<script type="text/javascript">
+		var datas=[
+			{label:'A',value:100},
+			{label:'B',value:100},
+			{label:'C',value:100},
+			{label:'D',value:100},
+			{label:'E',value:100},
+			{label:'F',value:100},
+		];
+		Vue.component('chartstemplate',{
+			template:'#chartsTemplate',
+			props:['stats'],
+			data:function(){
+				return {
+					//
+				}
+			},
+			computed:{
+				pointsFn:function(){
+					var len=this.stats.length;
+					return this.stats.map(function(stat,i){
+						var point=valueToPoint(stat.value,i,len);
+						return point.x+','+point.y;
+					}).join(",")
+				}
+			},
+			components:{
+				'axisLabel':{//text的坐标系值
+					template:'#axisTemplate',
+					props:{
+						stat:Object,
+						index:Number,
+						len:Number
+					},
+					computed:{
+						pointFn:function(){
+							return valueToPoint(+this.stat.value+10,this.index,this.len)
+						}
+					}
+				}
+			}
+		})
+		function valueToPoint(value,index,len){//计算各个坐标系点的值(x,y)
+			var x=0,
+				y= -value *0.8,
+				angle=Math.PI*2/len*index,
+				rx= x * Math.cos(angle) - y * Math.sin(angle) + 100,
+				ry= x * Math.sin(angle) + y * Math.cos(angle) + 100;
+			console.log(rx,ry)
+			return {
+				x:rx,
+				y:ry
+			}
+		}
+		var vm=new Vue({
+			el:'#main',
+			data:{
+				stats:datas,
+				newLabel:''
+			},
+			methods:{
+				remove:function(stat){
+					if(this.stats.length>3){
+						this.stats.splice(this.stats.indexOf(stat),1);
+					}else{
+						window.confirm('Can\'t delete more!');
+					}
+				},
+				addStat:function(e){
+					e.preventDefault();
+					if(!this.newLabel)return;
+					this.stats.push({
+						label:this.newLabel,
+						value:100
+					});
+					this.newLabel='';
+				}
+			}
+		})
+	</script>
+	<!--
+		svg创建一个SVG文档片段,width="SVG片段的宽度（默认为100％）",height="SVG片段的高度（默认为100％）"
+		polygon定义一个包含至少三边图形，points="多边形的点。点的总数必须是偶数"。必需的。
+		<g>用于把相关元素进行组合的容器元素,id="该组的名称",fill="该组填充颜色",opacity="该组不透明度"
+		<circle>定义一个圆,cx="圆的x轴坐标",cy="圆的y轴坐标",r="圆的半径"(必需)
+		<pre></pre> 元素可定义预格式化的文本
+		<text></text>元素定义了一个由文字组成的图形。指定属性x,y可以在坐标系中用来绘制文本
+	-->
+</body>
+</html>

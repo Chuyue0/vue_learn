@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>模式组件实例</title>
+	<style type="text/css">
+		.modal-mask{width: 100%;height: 100%; position: fixed;left: 0;top: 0;z-index: 999; background-color: rgba(0,0,0,0.5); display: table; transition: opacity 0.3s ease; }
+		.modal-wrapper{display: table-cell; vertical-align: middle;}
+		.modal-content{width: 300px; padding: 20px 30px; margin: 0 auto;background-color: #fff; border-radius: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.33); transition: all 0.3s ease;}
+		.modal-header{ color: #42b983; margin-top: 0;}
+		.modal-body{margin: 15px auto;}
+		.modal-footer{padding: 15px auto;}
+		.modal-enter{opacity: 0;}
+		.modal-leave-active{opacity: 0;}
+		.modal-enter .modal-content,.modal-leave-active .modal-content{-webkit-transform: scale(1.1);transform: scale(1.1);}
+	</style>
+	<script src="src/vue.min.js"></script>
+	<script type="text/x-template" id="modelDialog">
+		<transition name="modal">
+			<div class="modal-mask">
+				<div class="modal-wrapper">
+					<div class="modal-content">
+						<div class="modal-header">
+							<slot name="header">
+								modal header
+							</slot>
+						</div>
+						<div class="modal-body">
+							<slot name="body">
+								modal content
+							</slot>
+						</div>
+						<div class="modal-footer">
+							<slot name="footer">
+								modal footer &nbsp;&nbsp;
+								<button @click="$emit('close')">Close</button>
+							</slot>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</script>
+</head>
+<body>
+	<p>使用到的特性：组件，prop 传递，内容插入(content insertion)，过渡（transitions）。</p>
+	<div id="main">
+		<button @click="showDialog=true" id="showBtn">show model</button>
+		<modeltemplate v-if="showDialog==true" @close="showDialog=false">
+			<h3 slot="header">custom header</h3>
+		</modeltemplate>
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.config.devtools = true;
+	Vue.component('modeltemplate',{
+		template:'#modelDialog'
+	})
+	var vm=new Vue({
+		el:'#main',
+		data:{
+			showDialog:false
+		}
+	})
+</script>
+	<!--
+		Vue提供 transition的封装组件；
+		<transition> 元素作为单个元素/组件的过渡效果。
+		<transition> 不会渲染额外的 DOM 元素，也不会出现在检测过的组件层级中。它只是将内容包裹在其中，简单的运用过渡行为。
+		<transition name="modal"></transition>用于自动生成 CSS 过渡类名。例如：name: 'modal' 将自动拓展为.modal-enter，.modal-enter-active等。
+		内置组件 slot分发内容；
+		特殊属性 slot，用于标记往哪个slot中插入子组件内容；
+		<h3 slot="header">custom header</h3>对应的<slot name="header">modal header</slot> 挂载内容将被忽略
+		$emit触发当前实例上的事件；@click="$emit('close')"当点击关闭按钮时候触发close事件@close="showDialog=false"
+	-->
+</html>

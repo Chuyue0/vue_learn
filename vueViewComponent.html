@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>简单的树形视图实现</title>
+	<style type="text/css">
+		body{font-family: Menlo,Consolas,monospace; color: #444;}
+		.hidden{display: none;}
+		.bold{ font-weight: bold;}
+		.item{cursor: pointer;}
+		ul{padding-left:1em; margin-left: 0.75em; line-height: 1.5rem; list-style-type: dot;}
+	</style>
+	<script src="src/vue.min.js"></script>
+	<script type="text/x-template" id="view-template">
+		<li>
+			<div :class="{'bold':isFolder}" @click="toggle" @dblclick="changeType">
+				{{alllist.name}}
+				<span v-if="isFolder">[ {{show?'-':'+'}} ]</span>
+			</div>
+			<ul v-show="show" v-if="isFolder">
+				<viewtemplate class="item" :alllist="childs" v-for="childs in alllist.children"></viewtemplate>
+				<!--注意绑定数据是childs，不在是alllist-->
+				<li class="add" @click="addChildren">+</li>
+			</ul>
+		</li>
+	</script>
+</head>
+<body>
+	<p class="hidden">展现了组件的递归使用</p>
+	<p>(You can double click on an item to turn it into a folder!)</p>
+	<div>
+		<ul id="main">
+			<viewtemplate class="item" :alllist="treeData"></viewtemplate>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		var data={
+			name:'My Tree',
+			children:[
+				{name:'child1'},
+				{name:'child2'},
+				{
+					name:'childFolder1',
+					children:[
+						{
+							name:'childFolder2',
+							children:[
+								{name:'childFolderchilde21'},
+								{name:'childFolderchilde22'},
+							]
+						},
+						{name:'childFolderchilde11'},
+						{name:'childFolderchilde12'},
+						{
+							name:'childFolder3',
+							children:[
+								{name:'childFolderchilde31'},
+								{name:'childFolderchilde32'},
+							]
+						}
+					]
+				}
+			]
+		};
+		Vue.component('viewtemplate', {
+			template:'#view-template',
+			props:{
+				alllist:Object
+			},
+			data:function (){
+				return  {
+					show:false
+				}
+			},
+			computed:{
+				isFolder:function (){
+					return this.alllist.children && this.alllist.children.length;
+				}
+			},
+			methods:{
+				toggle:function(){
+					if(this.isFolder){
+						this.show=!this.show
+					}
+				},
+				changeType:function(){
+					if(!this.isFolder){
+						Vue.set(this.alllist,'children',[]);
+						this.addChildren();
+						this.show=true;
+					}
+				},
+				addChildren:function(){
+					this.alllist.children.push({
+						name:'new stuff'
+					})
+				}
+			}
+		})
+		var vm=new Vue({
+			el:'#main',
+			data:{
+				treeData:data
+			}
+		})
+	</script>
+</body>
+</html>
