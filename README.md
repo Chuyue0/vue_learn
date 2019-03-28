@@ -29,7 +29,11 @@ API: http://cn.vuejs.org/v2/api/
 1.vue路由器`unpkg`引入  
 	http://unpkg.com/vue-router/dist/vue-router.js
 
-
+2019/03/28 update <br>
+1.fork 源码学习
+  了解响应式原理、依赖收集；
+2.vue理解笔记
+  html文件
 
 
 
