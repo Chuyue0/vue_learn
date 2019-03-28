@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue双向数据绑定实现原理</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" id="ipt">
+    <p class="text"></p>
+</div>
+
+<div>
+    1.双向数据绑定底层原理实现
+    实时响应 M-V
+    2.实现的方式
+    a.通过数据修改去渲染UI层 -- 手动绑定 -- JS监听
+    b.通过 watcher 监听数据，查找数据有关的所有元素，在进行比较 -- 脏检查 -- angular
+    c.通过 get 和 set 来监听，数据有变化的时候调用节点指令 -- 数据劫持
+
+    angular是最先提供双向绑定
+</div>
+
+<div>
+    扩展:
+    1. input 监听事件
+    input 和 change , input 事件是即使触发、 change则失去焦点后触发
+    2. Object.keys()
+    keys方法会返回一个由一个给定对象的自身可枚举属性组成的数组，数组中属性名的排列顺序和使用 for...in 循环遍历该对象时返回的顺序一致 。
+</div>
+<script type="text/javascript">
+    (function () {
+        if (0) {
+            let $ipt = document.getElementById('ipt');
+            let $p = document.querySelector('.text');
+            let obj = {}, val = '';
+            /*$ipt.addEventListener('input',function () {
+                console.log(this.value);
+                $p.innerHTML=this.value;
+            });*/
+            $ipt.oninput = function () {
+                //js单向数据绑定
+                $p.innerHTML = this.value;
+            };
+            Object.addEventListener(obj, 'name', {
+                get: function () {
+                    return val;
+                },
+                set: function (newVal) {
+                    val = newVal;
+                }
+            });
+            obj.name = '123';
+            console.log(obj);
+        }
+    }())
+</script>
+<script>
+    const ipt = document.getElementById('ipt'),
+        text = document.querySelector('.text');
+
+    //数据监听
+    function Observe(value) {
+        if (!value || (typeof value != 'object')) {
+            return;
+        }
+        console.log(Object.keys(value)); //输出为 '属性'数组
+        Object.keys(value).forEach(key => {
+            console.log(key);
+            defineReactive(value, key, value[key]);
+        })
+    }
+
+    //数据拦截
+    function defineReactive(obj, key, val) {
+        Object.defineProperty(obj, key, {
+            get: function () {
+                return val;
+            },
+            set: function (newVal) {
+                if (newVal === val) return;
+                val = newVal;
+                callBackFn(val);
+            }
+        });
+    }
+
+    function VUEY(options) {
+        //options传入的是个对象
+        console.log(this); // this指向VUEY整个对象
+        this.$data = options.data;
+        this.$el = options.el;
+        Observe(this.$data);
+    }
+
+
+    let $vm = new VUEY({
+        el: '#app',
+        data: {
+            text: '',
+            arg2: ''
+        }
+    });
+    //$vm.$data.arg1 = '123';
+    ipt.addEventListener('keyup', function (e) {
+        $vm.$data.text = e.target.value;
+    });
+
+    function callBackFn(value) {
+        text.innerHTML = value;
+    }
+
+</script>
+</body>
+</html>

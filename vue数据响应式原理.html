@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue数据响应式原理深入</title>
+</head>
+<body>
+<div>
+    <p>
+        介绍：
+    </p>
+    1.最独特的特性，是其非侵入性的响应式系统； <br>
+    2.model 到 view 的相互过程，即双向绑定； <br>
+    JS代码更新到 model 层时， view层也会更新；<br>
+    同样用户更新了 view 层，model数据也会自动更新； <br>
+    3.让状态管理更简单直观；
+</div>
+
+<div>
+    <p>
+        原理实现方式：
+    </p>
+    1. ES5 Object.defineProperty() 方法重新定义了set和get操作实现 <br>
+    2. ES6 proxy() 实现 <br>
+</div>
+
+<div>
+    <p>
+        扩展：
+    </p>
+    1. ES5 Object.defineProperty() <br>
+    方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。 <br>
+    Object.defineProperty(obj对象, prop属性名称, descriptor属性描述符) <br>
+
+    2. ES5.1 Object.create() <br>
+    方法创建一个新对象，使用现有的对象来提供新创建对象的 _proto_
+
+    3. ES6 proxy
+    对象用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）
+    let p = new Proxy(target, handler);
+
+    4. ES6 class
+    类关键字
+    有一个默认的构造函数constructor()，通过new生成实例对象时自动调用，其中this指向实例对象
+
+    5. JS input事件监听
+    oninput事件在value改变时触发，实时
+</div>
+
+<div id="app">
+    <h2>数据响应式2.0</h2>
+    <div>
+        <p v-text="iptP"></p>
+        <p v-text="iptText"></p>
+        <input type="text" v-model="iptText"/>
+    </div>
+</div>
+
+<div id="app2">
+    <h2>数据响应式3.0</h2>
+    <div>
+        <p class="app2-text"></p>
+        <input type="text" id="app2-input"/>
+    </div>
+</div>
+<script type="text/javascript">
+    /*
+    * VUE 响应式实现
+    * */
+
+    //第一步实现基本架构
+    //第二步把模型的数据显示到视图，M - V
+    //第三步 (更新视图到模型，在更新视图)   双向绑定 ， V - M
+
+    (function () {
+        //Vue2.0的实现方式，defineProperty设置
+
+        //发布者类
+        class VUE {
+            constructor(options) {
+                //构造函数 ， 类的默认方法 ， this 指向实例对象
+                this.options = options;
+                this.data = options.data;
+                this.el = document.querySelector(options.el);
+                this._directives = {}; //存放容器，数据处理
+
+                this.Observe(this.data);
+                this.Compile(this.el);
+            }
+
+            Observe(data) {
+                //拦截数据
+                for (let key in data) {
+                    this._directives[key] = []; // 存放指令，有多少属性开辟多少个空间
+
+                    let curVal = data[key]; // 保存当前的值
+                    let _this = this._directives[key]; // this._directives[key]类似空数组对象
+                    Object.defineProperty(this.data, key, {
+                        get: function () {
+                            return curVal
+                        },
+                        set: function (newVal) {
+                            if (newVal != curVal) {
+                                curVal = newVal;
+                                _this.forEach(obj => { //遍历订阅者的实例
+                                    console.log(obj);//是Watcher类，可调用底层的方法，_proto_
+                                    obj.update(); //更新视图
+                                })
+                            }
+                        }
+                    })
+                }
+            }
+
+            Compile(el) {
+                //解析指令
+                let nodes = el.children;  //#app下面的子元素集合
+                for (let i = 0; i < nodes.length; i++) {
+                    //查找子元素中的指令所在，考虑多层盒子情况，可用递归查找
+                    let node = nodes[i];
+                    if (node.children.length) {
+                        //子层级则进行递归查找
+                        this.Compile(node);
+                    }
+                    if (node.hasAttribute('v-text')) {
+                        //需要考虑多个属性名相同的情况
+                        let attrVal = node.getAttribute('v-text');
+                        this._directives[attrVal].push(new Watcher(node, attrVal, this, 'innerHTML'));
+                    }
+                    if (node.hasAttribute('v-model')) {
+                        let attrVal = node.getAttribute('v-model');
+                        this._directives[attrVal].push(new Watcher(node, attrVal, this, 'value'));
+                        //let _this=this;
+                        node.addEventListener('input', (function () {
+                            return function (e) {
+                                //如果外部不绑定this,则需要外面保存VUE全局对象的值；
+                                //因为使用了闭包，可以直接返回到外面传入this，效果和外面_this一样
+                                console.log(this); //外部绑定this就可以直接使用，不再是当前指向对象
+                                console.log(e.target.value); //当前指向对象值
+                                this.data[attrVal] = e.target.value;
+                            }
+                        })().bind(this));
+                    }
+                }
+            }
+        }
+
+        //订阅者类
+        class Watcher {
+            constructor(el, vm, self, attr) {
+                //构造函数
+                this.el = el;
+                this.vm = vm;
+                this.self = self;
+                this.attr = attr;
+
+                this.update();
+            }
+
+            update() {
+                //更新数据
+                this.el[this.attr] = this.self.data[this.vm];
+                //div对象.innerHTML=VUE对象.data['iptText']
+            }
+
+
+        }
+
+        const $app = new VUE({
+            el: '#app',
+            data: {
+                iptText: '1111',
+                iptP: '222222'
+            }
+        });
+
+        console.log('---------------------------------------------');
+    }());
+
+    (function () {
+        //3.0实现方式，使用proxy代理
+        const data = {
+            text2: '123'
+        }
+        const input = document.getElementById('app2-input');
+        const app2Text = document.querySelector('.app2-text');
+
+        const handler = {
+            //监控数据变化
+            set: function (target, prop, value) {
+                if (prop == 'text2') {
+                    target[prop] = value; // 更新值
+                    //以下更新视图
+                    app2Text.innerHTML = value;
+                    input.value = value;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        let app2 = new Proxy(data, handler); //构造proxy对象
+
+        input.addEventListener('input', function (e) {
+            app2.text2 = e.target.value;
+        }, false)
+    }());
+</script>
+<script type="text/javascript">
+    /*
+    * JS知识扩展
+    * */
+
+    (function () {
+        //1.create实现类式继承
+
+        //父类
+        function Shape() {
+            this.x = 0;
+            this.y = 0;
+            //此时的this无上下文，则是指window全局；如有调用则是指向当前
+            console.log(this); // window
+        }
+
+        //父类的方法
+        Shape.prototype.move = function (x, y) {
+            this.x = x + 10;
+            this.y = y + 20;
+            console.log(this.x, this.y)
+        }
+
+        //子类
+        function rectangles() {
+            Shape.call(this); // 调用父类构造函数
+        }
+
+        //子类继承父类
+        rectangles.prototype = Object.create(Shape.prototype);
+        rectangles.prototype.constructor = rectangles;
+
+        const reat = new rectangles();
+        reat.move(1, 1);
+
+        console.log(Shape.prototype);
+        console.log('---------------------------------------------');
+
+        //2.defineProperty 使用
+
+        //使用 _proto_
+        const obj = {};
+        const descriptor = Object.create(null); //没有继承的属性，属性指向null
+        descriptor.value = 'static';
+        Object.defineProperty(obj, 'key', descriptor);
+
+        //显式
+        Object.defineProperty(obj, 'key', {
+            configurable: false,
+            enumerable: false,
+            writable: false,
+            value: 'static'
+        });
+
+        Object.defineProperty(obj, 'num', {
+            configurable: true,
+            enumerable: false,
+            writable: true,
+            value: 100
+        })
+        obj.num = 101; //writable为true时才可以改变数值
+
+        //enumerable定义了对象的属性是否可以在 for...in 循环和 Object.keys() 中被枚举。
+        Object.defineProperty(obj, 'a', {
+            value: '1',
+            enumerable: true
+        });
+        Object.defineProperty(obj, 'b', {
+            value: '2',
+            enumerable: false
+        });
+        Object.defineProperty(obj, 'c', {
+            value: '3'
+        });
+
+        console.log(Object.keys(obj)); // ["a"]
+        console.log(obj.propertyIsEnumerable('b')); //false
+
+        //set & get
+        function Archiver() {
+            //构造函数
+            var temperature = null;
+            var archive = [];
+            Object.defineProperty(this, 'temperature', {
+                get: function () {
+                    console.log('get');
+                    return temperature;
+                },
+                set(value) {
+                    temperature = value;
+                    archive.push({val: temperature});
+                }
+            })
+            this.getArchive = function () {
+                return archive;
+            }
+        }
+
+        const arc = new Archiver();
+        arc.temperature = 12;
+        arc.temperature = 13;
+        console.log(arc.getArchive());
+        console.log('---------------------------------------------');
+
+        //3.proxy
+        let handle = {
+            get(target, name) {
+                return name in target ? target[name] : 36;
+            }
+        }
+        let p = new Proxy({}, handle);
+        p.x = 10;
+        p.y = undefined;
+        console.log(p.x, p.y, p.z); // p.z不存在这个属性名则返回36
+        console.log('z' in p); // false
+
+        //验证向一个对象的传值
+        let validator = {
+            set: function (target, prop, value) {
+                if (prop == 'age') {
+                    if (!Number.isInteger(value)) {
+                        //throw new TypeError('this is not a number');
+                    }
+                    if (value > 200) {
+                        throw new TypeError('the age is seems invalid');
+                    }
+                    target[prop] = value;
+                }
+            }
+        };
+        let person = new Proxy({}, validator);
+        person.age = 100;
+        console.log(person.age); // 100
+        person.age = '100';
+        console.log(person.age); // 抛出给定错误信息 Uncaught TypeError: this is not a number
+
+        console.log('---------------------------------------------');
+    }());
+
+    (function () {
+        'use strict';
+    }())
+</script>
+</body>
+</html>

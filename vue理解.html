@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VUE 知识点理解</title>
+</head>
+<body>
+<div id="app">
+    <p>{{message}}</p>
+
+    <anchor-heading :level="1">一级</anchor-heading>
+    <anchor-heading :level="2" title="123">
+        <strong>二级</strong>
+        <span>x <i>..</i></span>
+    </anchor-heading>
+</div>
+
+<div>
+    扩展：
+    1.响应式系统原理：
+        getter/setter
+        Object.defineProperty()
+
+    2.代理原型：
+        vue拦截数组变异方法
+
+    3.内部追踪：
+        proxy 、渲染函数
+        依赖的收集
+
+    4.渲染函数：
+        模板编译成渲染函数
+        render函数
+
+    5.实例属性：
+        vm.$options ，Vue实例初始化的选项
+        vm.$el , Vue实例使用的根dom元素
+
+    6. VUE源码解读
+        proxy代码初始化是从  initProxy()
+        检测执行环境是否支持 proxy , hasProxy
+        $mount挂载 ，运行时构建使用和完整挂载使用，源码中定义了两次；
+        创建了一个编译器 createCompilerCreator
+
+    7. JS
+        with(){}
+        key in target , （in运算符）如果指定的属性在指定的对象或者原型链中，返回true;
+        [].map() 映射，用法和forEach()
+</div>
+
+<script src="public/js/vue.min.js"></script>
+<script type="text/x-template" id="heading-template">
+    <h1 v-if="level == 1">
+        <slot></slot>
+    </h1>
+</script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            message: '123',
+            template: '<div>{{text}}</div>',
+            text: 'text'
+        },
+        created() {
+            this.updateMessage();
+        },
+        methods: {
+            updateMessage: function () {
+                this.message = '更新数据123456';
+                this.$nextTick();
+            }
+        }
+    });
+
+    // vm.$nextTick()实例方法更新DOM
+    vm.message = '更新数据123456789';
+    console.log(vm.$el); //vue实例使用的根dom元素
+    console.log(vm.$el.textContent); // '123' ，数据没有更新
+    vm.$nextTick(function () {
+        console.log(vm.$el.textContent); // '更新数据123456789'，数据更新
+    });
+
+    //检测执行环境是否支持 Proxy 对象
+    var hasProxy =
+        typeof Proxy !== 'undefined' &&
+        Proxy.toString().match(/native code/);
+    console.log(hasProxy);
+
+
+    //渲染函数
+    console.log(vm.$options.render);
+    Vue.component('anchor-heading', {
+        template: '',
+        render: function (createElement) {
+            console.log(this);
+            return createElement(
+                'h' + this.level,
+                this.$slots.default
+            )
+        },
+        props: {
+            title: String,
+            level: {
+                type: Number,
+                required: true
+            }
+        },
+        data:function () {
+            return {
+            }
+        }
+    })
+    /*
+    * props是在组件注册时的一些自定义特性;
+    * slot插槽
+    * createElement
+    * 组件中 this.$slots.default
+    * this.$emit() 触发当前实例上的事件
+    * */
+</script>
+</body>
+</html>
