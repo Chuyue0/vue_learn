@@ -35,7 +35,8 @@ API: http://cn.vuejs.org/v2/api/
 2.vue理解笔记 <br>
   html文件 <br>
 
-
+2019/04/09 update <br>
+1.webComponent 组件之间的学习
 
 
 
