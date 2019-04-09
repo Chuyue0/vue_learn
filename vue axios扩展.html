@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue axios</title>
+</head>
+<body>
+<div>
+    扩展：
+    1.代码的封装，借助ES6的
+
+    2. axios的使用
+    二次封装axios使用
+
+    具体参考 vue-webpack-demo 文件，利于vue-cli脚手架搭建
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<!--<script src="public/axios.js"></script>-->
+<script type="module">
+    import axios from 'public/axios'
+    /*export default (function () {
+        function qa() {
+            console.log('456789');
+            return new _iqa();
+        }
+        function _iqa() {
+            console.log('123456');
+        }
+        return qa;
+    })();*/
+    axios();
+
+    /*import axios from 'public/axios';
+    axios();*/
+</script>
+</body>
+</html>
