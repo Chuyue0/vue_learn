@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angular 底层实现原理</title>
+
+    <link rel="import" href="web-component.html"> <!--引入存在的组件-->
+    <link rel="import" href="web-component-tag.html">
+</head>
+<body>
+<div>
+    1.组件化开发
+    web-compont 组件化；
+    shadow root的作用； 影子根对象
+    x-tag；
+    call改变this的作用域；
+</div>
+
+<div>
+    a. web-component 组件
+    独立，相互不影响
+    组件可以嵌套
+    可复用
+</div>
+
+<div>
+    b. shadow root 影子根对象
+    能创建出根节点
+    里面的作用域是独立的
+    保护影子节点中的内容不影响外部
+    this.createShadowRoot();
+</div>
+<div>
+    c. document.importNode(node,deep)
+    方法把一个节点从另一个文档复制到该文档以便应用;
+    deep为true时还要递归复制 importedNode 节点的所有子孙节点；
+</div>
+<div>
+    c. 跨域问题
+
+</div>
+<div>
+    d. x-tag-core
+        组件核心代码 ，发生变化后
+    定义好core.js代码后，就可以复用 angular-component-test 组件
+</div>
+<div>
+    2. ES5.1 Object.create() <br>
+    方法创建一个新对象，使用现有的对象来提供新创建对象的 _proto_
+</div>
+<div id="app">
+    <web-component data-color="">
+
+    </web-component>
+    <web-component-tag class="test" data-tag="x-tag" who="rosea">
+
+    </web-component-tag>
+</div>
+<script type="text/javascript">
+    window.setTimeout(function () {
+        document.querySelector('.test').setAttribute('data-tag','x-tag-test');
+    },2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<script src="./component/x-tag/core.js"></script>
+<template>
+    <style>
+        .color1{
+            color: #eb1016;
+        }
+    </style>
+    <p class="color1">x-tage 测试文件 <strong>123</strong> :)</p>
+</template>
+<script>
+    /*
+    * 像vue的生命周期写法
+    * */
+    (function(window, document, undefined) {
+        // Refers to the "importer", which is index.html
+        var thatDoc = document;
+        // Refers to the "importee", which is src/hello-world.html
+        var thisDoc = document.currentScript.ownerDocument;
+        // Gets content from <template>
+        var template = thisDoc.querySelector('template').content;
+        xtag.register('web-component-tag', {
+            lifecycle: {
+                created: function() {
+                    // Caches <strong> DOM query
+                    this.strong = template.querySelector('strong');
+                    // Creates the shadow root
+                    this.shadowRoot = this.createShadowRoot();
+                    this.uiSetWho();
+                },
+                attributeChanged: function() {
+                    this.uiSetWho();
+                }
+            },
+            accessors: {
+                who: {
+                    attribute: {},
+                    get: function(){
+                        return this.getAttribute('who') || "xxx"
+                    },
+                    set: function(value){
+                        this.xtag.data.who = value;
+                    }
+                }
+            },
+            methods: {
+                uiSetWho: function() {
+                    // Sets "who" value into <strong>
+                    console.log(this.who);
+                    this.strong.textContent = this.who;
+                    // Removes shadow root content
+                    this.shadowRoot.innerHTML = '';
+                    // Adds a template clone into shadow root
+                    var clone = thatDoc.importNode(template, true);
+                    this.shadowRoot.appendChild(clone);
+                }
+            }
+        });
+    })(window, document);
+</script>

@@ -1,0 +1,36 @@
+<!--
+    组件
+-->
+<template>
+    <style type="text/css">
+        /* 样式只影响template中，不是全局 */
+        .color1 {
+            color: #0AB6E4;
+        }
+    </style>
+    <h2 class="color1">Angular组件内容</h2>
+</template>
+<script type="text/javascript">
+    (function () {
+        //闭包，独立，变量相互不影响；
+        console.log(HTMLElement.prototype); // HTMLElement输出为一个函数形式
+        var element = Object.create(HTMLElement.prototype);
+        var template = document.currentScript.ownerDocument.querySelector('template').content; // 获取当前脚本的拥有文档来查找template的内容；
+        console.log(template);
+        element.createdCallback = function () { //创建时的回调函数
+            var shadowRoot = this.createShadowRoot(); //创建shadow root节点，关键
+            var clone = document.importNode(template, true);
+            shadowRoot.appendChild(clone); // 添加模板追加到克隆对象
+        }
+        document.registerElement('web-component', {
+            prototype: element
+        })
+    }());
+    /*
+    * 扩展
+    * */
+    //所有标签（比如div、span等）的父元素的根都是 HTMLElement
+    //文档对象模型 document，指向页面根节点
+    //闭包产生的原理，通过一个函数在调用过程产生的独立内存，延长生命周期；
+    //内存泄漏就是闭包使用不当产生
+</script>
